@@ -175,9 +175,12 @@ key_callback :: proc "c" (window: glfw.Window_Handle, key, scancode, action, mod
 
     io := imgui.get_io();
 
-    if      action == i32(glfw.PRESS)   do io.keys_down[key] = true;
-    else if action == i32(glfw.RELEASE) do io.keys_down[key] = false;
-
+    /* Fixes crash when pressing fn and volume keys */
+    if key != glfw.KEY_UNKNOWN {
+        if      action == i32(glfw.PRESS)   do io.keys_down[key] = true;
+        else if action == i32(glfw.RELEASE) do io.keys_down[key] = false;
+    }
+    
     io.key_ctrl  = io.keys_down[glfw.KEY_LEFT_CONTROL] || io.keys_down[glfw.KEY_RIGHT_CONTROL];
     io.key_shift = io.keys_down[glfw.KEY_LEFT_SHIFT] || io.keys_down[glfw.KEY_RIGHT_SHIFT];
     io.key_alt   = io.keys_down[glfw.KEY_LEFT_ALT] || io.keys_down[glfw.KEY_RIGHT_ALT];
